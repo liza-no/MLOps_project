@@ -3,6 +3,19 @@ hotel_booking_raw:
   type: pandas.CSVDataset
   filepath: data/01_raw/booking.csv
 
+ingested_data:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/ingested_data.csv
+
+
+ref_data:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/ref_data.csv
+
+ana_data:
+  type: pandas.CSVDataset
+  filepath: data/02_intermediate/ana_data.csv
+
 # Cleaned data
 hotel_booking_clean:
   type: pandas.CSVDataset
@@ -10,6 +23,17 @@ hotel_booking_clean:
   save_args:
     index: false
 
+reporting_data_train:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: json.JSONDataset
+    filepath: data/08_reporting/reporting_data_train.json
+
+preprocessed_training_data:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/preprocessed_train_data.csv
+
+  
 # Features for modeling
 hotel_booking_features:
   type: pandas.CSVDataset
