@@ -10,7 +10,7 @@ def split_data(df, parameters):
 
     cutoff_date = parameters["cutoff_date"]
 
-    ref_data = df[df['date of reservation'] <= cutoff_date]
-    ana_data = df[df['date of reservation'] > cutoff_date]
+    ref_data = df[df['date_of_reservation'] <= cutoff_date]
+    ana_data = df[df['date_of_reservation'] > cutoff_date]
 
     return ref_data, ana_data

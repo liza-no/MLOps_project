@@ -41,6 +41,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "all": all_pipelines,
         "ingestion": ingestion_pipeline,
         "split_data": split_data_pipeline,
-        "preprocess_train": preprocess_train_pipeline
+        "preprocess_train": preprocess_train_pipeline,
         
+        "__default__":  ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline
+
     }
