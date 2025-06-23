@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Asus/Documents/GitHub/MLOps/project_mlops/mlruns/504828544064566329/3cbc8ea65d504e029cfe2dfb47970e98/artifacts
+end_time: 1750690613192
+entry_point_name: ''
+experiment_id: '504828544064566329'
+lifecycle_stage: active
+run_id: 3cbc8ea65d504e029cfe2dfb47970e98
+run_name: salty-gull-276
+run_uuid: 3cbc8ea65d504e029cfe2dfb47970e98
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750690612496
+status: 4
+tags: []
+user_id: Asus

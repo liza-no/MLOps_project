@@ -1,0 +1,21 @@
+digest: d2123d60
+name: dataset
+profile: '{"num_rows": 25660, "num_elements": 487540}'
+schema: '{"mlflow_colspec": [{"type": "long", "name": "index", "required": true},
+  {"type": "string", "name": "booking_id", "required": true}, {"type": "long", "name":
+  "number_of_adults", "required": true}, {"type": "long", "name": "number_of_children",
+  "required": true}, {"type": "long", "name": "number_of_weekend_nights", "required":
+  true}, {"type": "long", "name": "number_of_week_nights", "required": true}, {"type":
+  "string", "name": "type_of_meal", "required": true}, {"type": "boolean", "name":
+  "car_parking_space", "required": true}, {"type": "string", "name": "room_type",
+  "required": true}, {"type": "long", "name": "lead_time", "required": true}, {"type":
+  "string", "name": "market_segment_type", "required": true}, {"type": "boolean",
+  "name": "repeated", "required": true}, {"type": "long", "name": "p_c", "required":
+  true}, {"type": "long", "name": "p_not_c", "required": true}, {"type": "double",
+  "name": "average_price", "required": true}, {"type": "long", "name": "special_requests",
+  "required": true}, {"type": "string", "name": "date_of_reservation", "required":
+  true}, {"type": "string", "name": "datetime", "required": true}, {"type": "string",
+  "name": "season", "required": true}]}'
+source: '{"tags": {"mlflow.user": "Asus", "mlflow.source.name": "C:\\Users\\Asus\\Documents\\GitHub\\MLOps\\project_mlops\\env_1\\Scripts\\kedro",
+  "mlflow.source.type": "LOCAL"}}'
+source_type: code

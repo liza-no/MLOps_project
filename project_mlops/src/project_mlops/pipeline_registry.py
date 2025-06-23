@@ -21,7 +21,9 @@ from project_mlops.pipelines import (
     ingestion as data_ingestion,
     preprocessing_train as preprocess_train,
     split_data,
-    split_train
+    split_train,
+    model_train as model_train_pipeline,
+    model_selection as model_selection_pipeline
 
 )
 
@@ -35,9 +37,12 @@ def register_pipelines() -> Dict[str, Pipeline]:
     split_data_pipeline = split_data.create_pipeline()
     preprocess_train_pipeline = preprocess_train.create_pipeline()
     split_train_pipeline = split_train.create_pipeline()
+    model_train = model_train_pipeline.create_pipeline()
+    model_selection = model_selection_pipeline.create_model_selection_pipeline()
 
 
-    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + split_train_pipeline
+    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + split_train_pipeline 
+    + model_train + model_selection
 
     return {
         "all": all_pipelines,
@@ -45,7 +50,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "split_data": split_data_pipeline,
         "preprocess_train": preprocess_train_pipeline,
         "split_train": split_train_pipeline,
-        
-        "__default__":  ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline,
+        "model_train": model_train,
+        "model_selection": model_selection,
 
+        "__default__": all_pipelines
     }

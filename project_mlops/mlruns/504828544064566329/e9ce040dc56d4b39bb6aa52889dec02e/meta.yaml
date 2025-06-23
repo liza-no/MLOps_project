@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Asus/Documents/GitHub/MLOps/project_mlops/mlruns/504828544064566329/e9ce040dc56d4b39bb6aa52889dec02e/artifacts
+end_time: 1750690613260
+entry_point_name: ''
+experiment_id: '504828544064566329'
+lifecycle_stage: active
+run_id: e9ce040dc56d4b39bb6aa52889dec02e
+run_name: model_train
+run_uuid: e9ce040dc56d4b39bb6aa52889dec02e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750690611812
+status: 4
+tags: []
+user_id: Asus
