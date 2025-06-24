@@ -16,50 +16,6 @@ credentials = conf_loader["credentials"]
 
 logger = logging.getLogger(__name__)
 
-
-def clean_data(
-    data: pd.DataFrame, params: Dict
-) -> Tuple[pd.DataFrame, Dict, Dict]:
-    """Does dome data cleaning.
-    Args:
-        data: Data containing features and target.
-    Returns:
-        data: Cleaned data
-    """
-    df_transformed = data.copy()
-
-    # drop raws NaN values (including NaT with invalid dates if any remained)
-    df_transformed = df_transformed.dropna()
-
-
-    # cast repeated and car parking space as boolean
-    df_transformed["car_parking_space"] = df_transformed["car_parking_space"].astype(bool)
-    df_transformed["repeated"] = df_transformed["repeated"].astype(bool)
-
-    # drop invalid bookings (with 0 sum of week and weekend nights, 0 sum of numner of children and adults)
-    df_transformed = df_transformed[~((df_transformed['number_of_week_nights'] == 0) & (df_transformed['number_of_weekend_nights'] == 0))]
-    df_transformed = df_transformed[~((df_transformed['number_of_children'] == 0) & (df_transformed['number_of_adults'] == 0))]
-
-    # remove outliers
-    for cols in ["lead_time", "average_price"]:
-        Q1 = df_transformed[cols].quantile(0.25)
-        Q3 = df_transformed[cols].quantile(0.75)
-        IQR = Q3 - Q1     
-
-        filter = (df_transformed[cols] >= Q1 - 1.5 * IQR) & (df_transformed[cols] <= Q3 + 1.5 *IQR)
-        df_transformed = df_transformed.loc[filter]
-
-    # drop columns deemed uninformative in EDA
-    cols_to_drop = params["preprocessing"]["drop_columns"]
-    df_transformed.drop(columns=cols_to_drop, inplace=True, errors="ignore")
-
-    # temporarily convert date_of_reservation to string to avoid JSON serialization error
-    df_temp = df_transformed.copy()
-    df_temp['date_of_reservation'] = df_temp['date_of_reservation'].astype(str)
-    describe_to_dict_verified = df_temp.describe(include='all').to_dict()
-
-    return df_transformed, describe_to_dict_verified
-
 def add_season(data: pd.DataFrame):
     
     df = data.copy()
@@ -70,10 +26,15 @@ def add_season(data: pd.DataFrame):
 
     return df
 
-def feature_engineer( data: pd.DataFrame):
+
+def feature_engineer( data: pd.DataFrame, OH_encoder, ST_scaler, params:Dict):
 
     #add season feature
     df = add_season(data)
+
+    #drop columns
+    cols_to_drop = params["preprocessing"]["drop_columns"]
+    df.drop(columns=cols_to_drop, inplace=True, errors="ignore")
 
     #map target variable
     if "booking_status" in df.columns:

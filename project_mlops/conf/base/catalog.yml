@@ -29,10 +29,33 @@ reporting_data_train:
     type: json.JSONDataset
     filepath: data/08_reporting/reporting_data_train.json
 
-preprocessed_training_data:
+preprocessed_training_data_trees:
   type: pandas.CSVDataset
-  filepath: data/03_primary/preprocessed_train_data.csv
+  filepath: data/03_primary/preprocessed_train_data_trees.csv
 
+preprocessed_training_data_lr:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/preprocessed_train_data_lr.csv
+
+preprocessed_batch_data_trees:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/preprocessed_batch_data_trees.csv
+
+preprocessed_batch_data_lr:
+  type: pandas.CSVDataset
+  filepath: data/03_primary/preprocessed_batch_data_lr.csv
+
+encoder_transform:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pickle.PickleDataset
+    filepath: data/04_feature/encoder.pkl
+
+scaler_transform:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pickle.PickleDataset
+    filepath: data/04_feature/scaler.pkl
   
 # Features for modeling
 hotel_booking_features:
