@@ -14,6 +14,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 import shap
 import matplotlib.pyplot as plt
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +40,12 @@ def model_train(X_train: pd.DataFrame,
         model (pickle): Baseline models.
         scores (json): Baseline model metrics.
     """
+    for df in [X_train, X_test]:
+        if "date_of_reservation" in df.columns:
+            # Optional: ensure it's datetime
+            #df["date_of_reservation"] = pd.to_datetime(df["date_of_reservation"], errors='coerce')
+            # Then drop it
+            df.drop(columns=["date_of_reservation"], inplace=True)
 
     # Enable autologging with MLflow
     with open('conf/local/mlflow.yml') as f:
@@ -55,36 +63,74 @@ def model_train(X_train: pd.DataFrame,
 
     results_dict = {}
     with mlflow.start_run(experiment_id=experiment_id, nested=True):
-        if parameters["use_feature_selection"]:
-            logger.info(f"Using feature selection in model train...")
-            X_train = X_train[best_columns]
-            X_test = X_test[best_columns]
+        #if parameters["use_feature_selection"]:
+            #logger.info(f"Using feature selection in model train...")
+            #X_train = X_train[best_columns]
+            #X_test = X_test[best_columns]
         y_train = np.ravel(y_train)
         model = classifier.fit(X_train, y_train)
+        
         # Making predictions
+        #y_train_pred = model.predict(X_train)
+        #y_test_pred = model.predict(X_test)
+        # Evaluating model
+        #acc_train = accuracy_score(y_train, y_train_pred)
+        #acc_test = accuracy_score(y_test, y_test_pred)
+        # Saving results in dict
+        #results_dict['classifier'] = classifier.__class__.__name__
+        #results_dict['train_score'] = acc_train
+        #results_dict['test_score'] = acc_test
+        # Logging in mlflow
+        #run_id = mlflow.last_active_run().info.run_id
+        #logger.info(f"Logged train model in run {run_id}")
+        #logger.info(f"Train Accuracy is {acc_train}")
+
+        #logger.info(f"Test Accuracy is {acc_test}")
+
+
+
+        # inside your mlflow run block:
         y_train_pred = model.predict(X_train)
         y_test_pred = model.predict(X_test)
+        y_test_prob = model.predict_proba(X_test)[:, 1]  # needed for AUC
+
         # Evaluating model
         acc_train = accuracy_score(y_train, y_train_pred)
         acc_test = accuracy_score(y_test, y_test_pred)
+        precision = precision_score(y_test, y_test_pred)
+        recall = recall_score(y_test, y_test_pred)
+        f1 = f1_score(y_test, y_test_pred)
+        roc_auc = roc_auc_score(y_test, y_test_prob)
+        conf_matrix = confusion_matrix(y_test, y_test_pred).tolist()  # for readability in logging
+
         # Saving results in dict
         results_dict['classifier'] = classifier.__class__.__name__
-        results_dict['train_score'] = acc_train
-        results_dict['test_score'] = acc_test
-        # Logging in mlflow
+        results_dict['train_accuracy'] = acc_train
+        results_dict['test_accuracy'] = acc_test
+        results_dict['precision'] = precision
+        results_dict['recall'] = recall
+        results_dict['f1_score'] = f1
+        results_dict['roc_auc'] = roc_auc
+        results_dict['confusion_matrix'] = conf_matrix
+
         run_id = mlflow.last_active_run().info.run_id
+        # Logging
         logger.info(f"Logged train model in run {run_id}")
-        logger.info(f"Accuracy is {acc_test}")
+        logger.info(f"Train Accuracy: {acc_train:.4f}") 
+        logger.info(f"Test Accuracy: {acc_test:.4f}")
+        logger.info(f"Precision: {precision:.4f} | Recall: {recall:.4f} | F1: {f1:.4f} | AUC: {roc_auc:.4f}")
+        logger.info(f"Confusion Matrix: {conf_matrix}")
+
 
 
     # Shap values calculation for model interpretability
-    explainer = shap.TreeExplainer(model)
+    explainer = shap.LinearExplainer(model, X_train)
     shap_values = explainer(X_train)
 
     
     shap.initjs()
 
-    shap.summary_plot(shap_values[:,:,1], X_train,feature_names=X_train.columns, show=False)
-    shap.summary_plot(shap_values[:,:,0], X_train,feature_names=X_train.columns, show=False)
+    shap.summary_plot(shap_values, X_train, feature_names=X_train.columns, show=False)
+
 
     return model, X_train.columns , results_dict, plt

@@ -25,12 +25,12 @@ def register_pipelines() -> Dict[str, Pipeline]:
     preprocess_train_pipeline = preprocess_train.create_pipeline()
     split_train_pipeline = split_train.create_pipeline()
     model_train = model_train_pipeline.create_pipeline()
-    model_selection = model_selection_pipeline.create_model_selection_pipeline()
+    model_selection = model_selection_pipeline.create_pipeline()
     preprocess_test_pipeline = preprocess_test.create_pipeline()
 
 
-    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + split_train_pipeline 
-    + model_train + model_selection
+    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + split_train_pipeline + model_train + model_selection
+    #+ model_selection
     all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + preprocess_test_pipeline
 
     return {

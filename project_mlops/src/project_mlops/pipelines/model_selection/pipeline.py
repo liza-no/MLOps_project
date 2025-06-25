@@ -13,7 +13,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=model_selection,
-                inputs=["X_train","X_test","y_train","y_test",
+                inputs=["X_train_lr", "X_test_lr", "y_train_lr", "y_test_lr",
+                        "X_train_trees", "X_test_trees", "y_train_trees", "y_test_trees",
                         "production_model_metrics",
                         "production_model",
                         "parameters"],
