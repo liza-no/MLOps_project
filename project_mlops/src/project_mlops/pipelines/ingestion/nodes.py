@@ -243,8 +243,8 @@ def ingestion(
 
     #df["datetime"] = pd.to_datetime(df["date of reservation"], errors="coerce")
 
-    df["datetime"] = pd.to_datetime(df["date of reservation"], errors="coerce")
-    df = df.dropna(subset=["datetime"])
+    df["date of reservation"] = pd.to_datetime(df["date of reservation"], errors="coerce")
+    df = df.dropna(subset=["date of reservation"])
 
     # Step 1.5: Rename columns to match Hopsworks naming conventions
     df.columns = [sanitize_column_name(col) for col in df.columns]

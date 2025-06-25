@@ -6,6 +6,7 @@ from pathlib import Path
 from sklearn.preprocessing import OneHotEncoder , StandardScaler
 
 
+
 from kedro.config import OmegaConfigLoader
 from kedro.framework.project import settings
 
@@ -56,7 +57,19 @@ def clean_data(
     # temporarily convert date_of_reservation to string to avoid JSON serialization error
     df_temp = df_transformed.copy()
     df_temp['date_of_reservation'] = df_temp['date_of_reservation'].astype(str)
-    describe_to_dict_verified = df_temp.describe(include='all').to_dict()
+    #describe_to_dict_verified = df_temp.describe().to_dict()
+    describe_to_dict_verified = {}
+    for col in df_temp.columns:
+        desc = df_temp[col].describe()
+        if pd.api.types.is_numeric_dtype(df_temp[col]):
+            describe_to_dict_verified[col] = {
+                k: float(desc[k]) for k in ["count", "mean", "std", "min", "25%", "50%", "75%", "max"]
+            }
+        elif pd.api.types.is_object_dtype(df_temp[col]) or pd.api.types.is_bool_dtype(df_temp[col]):
+            describe_to_dict_verified[col] = {
+                k: str(desc[k]) if isinstance(desc[k], (str, np.str_)) else int(desc[k])
+                for k in ["count", "unique", "top", "freq"]
+            }
 
     return df_transformed, describe_to_dict_verified
 

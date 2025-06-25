@@ -37,13 +37,13 @@ preprocessed_training_data_lr:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_train_data_lr.csv
 
-preprocessed_batch_data_trees:
+preprocessed_test_data_trees:
   type: pandas.CSVDataset
-  filepath: data/03_primary/preprocessed_batch_data_trees.csv
+  filepath: data/03_primary/preprocessed_test_data_trees.csv
 
-preprocessed_batch_data_lr:
+preprocessed_test_data_lr:
   type: pandas.CSVDataset
-  filepath: data/03_primary/preprocessed_batch_data_lr.csv
+  filepath: data/03_primary/preprocessed_test_data_lr.csv
 
 encoder_transform:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
