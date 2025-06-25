@@ -7,7 +7,10 @@ ingested_data:
   type: pandas.CSVDataset
   filepath: data/02_intermediate/ingested_data.csv
 
-
+reporting_tests:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/data_tests.csv
+  
 ref_data:
   type: pandas.CSVDataset
   filepath: data/02_intermediate/ref_data.csv
