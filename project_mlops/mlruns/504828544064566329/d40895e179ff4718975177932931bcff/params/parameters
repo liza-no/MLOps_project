@@ -1,1 +1,0 @@
-{'target_column': 'booking status', 'cutoff_date': '9/19/2018', 'to_feature_store': False, 'feature_group_name': 'booking_ingested', 'feature_group_version': 1}
