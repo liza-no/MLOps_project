@@ -12,6 +12,7 @@ import mlflow
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 import shap
 import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
@@ -121,8 +122,30 @@ def model_train(X_train: pd.DataFrame,
         logger.info(f"Precision: {precision:.4f} | Recall: {recall:.4f} | F1: {f1:.4f} | AUC: {roc_auc:.4f}")
         logger.info(f"Confusion Matrix: {conf_matrix}")
 
+    # --- Permutation Importance ---
+    perm = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
+    sorted_idx = perm.importances_mean.argsort()[::-1]
 
+    logger.info("Top 10 features by Permutation Importance:")
+    for i in sorted_idx[:10]:
+        logger.info(f"{X_test.columns[i]}: {perm.importances_mean[i]:.4f}")
 
+    plt.figure(figsize=(10, 6))
+    plt.barh(X_test.columns[sorted_idx[:10]][::-1], perm.importances_mean[sorted_idx[:10]][::-1])
+    plt.xlabel("Mean Decrease in Score")
+    plt.title("Top 10 Permutation Importances")
+    plt.tight_layout()
+    plt.savefig("data/08_reporting/permutation_importance.png")
+    plt.close()
+
+    # --- Partial Dependence Plots (PDP) ---
+    features_to_plot = ["lead_time", "special_requests", "average_price"]
+    fig, ax = plt.subplots(figsize=(12, 6))
+    PartialDependenceDisplay.from_estimator(model, X_test, features_to_plot, ax=ax)
+    plt.tight_layout()
+    plt.savefig("data/08_reporting/partial_dependence_plot.png")
+    plt.close() 
+    
     # Shap values calculation for model interpretability
     explainer = shap.LinearExplainer(model, X_train)
     shap_values = explainer(X_train)
