@@ -1,14 +1,44 @@
 """Register project pipelines."""
 
-from kedro.pipeline import Pipeline
-from project_mlops.pipelines import data_processing
+from typing import Dict
+from kedro.pipeline import Pipeline, pipeline
+
+from project_mlops.pipelines import (
+    ingestion as data_ingestion,
+    data_unit_tests as data_tests,
+    preprocessing_train as preprocess_train,
+    split_data,
+    preprocessing_test as preprocess_test,
+    upload_preprocessed_train_features as upload_train_features
 
 
-def register_pipelines() -> dict[str, Pipeline]:
-    """Register the project's pipelines."""
-    data_processing_pipeline = data_processing.create_pipeline()
-    
+)
+
+def register_pipelines() -> Dict[str, Pipeline]:
+    """Register the project's pipelines.
+
+    Returns:
+        A mapping from a pipeline name to a ``Pipeline`` object.
+    """
+    ingestion_pipeline = data_ingestion.create_pipeline()
+    data_unit_tests_pipeline = data_tests.create_pipeline()
+    split_data_pipeline = split_data.create_pipeline()
+    preprocess_train_pipeline = preprocess_train.create_pipeline()
+    upload_features_pipeline = upload_train_features.create_pipeline()
+    preprocess_test_pipeline = preprocess_test.create_pipeline()
+
+
+    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline
+
     return {
-        "__default__": data_processing_pipeline,
-        "data_processing": data_processing_pipeline,
+        "all": all_pipelines,
+        "ingestion": ingestion_pipeline,
+        "data_unit_tests": data_unit_tests_pipeline,
+        "split_data": split_data_pipeline,
+        "preprocess_train": preprocess_train_pipeline,
+        "preprocess_test": preprocess_test_pipeline,
+        "upload_train_features": upload_features_pipeline,
+        
+        "__default__":  ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline
+
     }

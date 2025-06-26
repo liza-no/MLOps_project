@@ -30,3 +30,10 @@ dependencies = [
     "vadersentiment>=3.3.2",
     "ydata-profiling>=4.16.1",
 ]
+[tool.kedro]
+package_name = "project_mlops"
+project_name = "MLOps Project"
+kedro_init_version = "0.19.14"
+
+[tool.kedro_telemetry]
+project_id = "40febf84a0f547138a30df24127a3687"
