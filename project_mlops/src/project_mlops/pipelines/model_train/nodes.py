@@ -25,7 +25,7 @@ def model_train(X_train: pd.DataFrame,
                 y_train: pd.DataFrame, 
                 y_test: pd.DataFrame,
                 parameters: Dict[str, Any], 
-                #best_columns
+                best_columns
                 ):
     """Trains a baseline model on the given data and saves it to the given model path.
 
@@ -64,10 +64,10 @@ def model_train(X_train: pd.DataFrame,
 
     results_dict = {}
     with mlflow.start_run(experiment_id=experiment_id, nested=True):
-        #if parameters["use_feature_selection"]:
+        if parameters["use_feature_selection"] and isinstance(classifier, LogisticRegression):
             #logger.info(f"Using feature selection in model train...")
-            #X_train = X_train[best_columns]
-            #X_test = X_test[best_columns]
+            X_train = X_train[best_columns]
+            X_test = X_test[best_columns]
         y_train = np.ravel(y_train)
         model = classifier.fit(X_train, y_train)
         
