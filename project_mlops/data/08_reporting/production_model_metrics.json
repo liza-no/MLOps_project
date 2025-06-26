@@ -1,0 +1,19 @@
+{
+  "classifier": "LogisticRegression",
+  "train_accuracy": 0.8041129831516353,
+  "test_accuracy": 0.7726461843409316,
+  "precision": 0.7351949927780452,
+  "recall": 0.7189265536723164,
+  "f1_score": 0.7269697691025946,
+  "roc_auc": 0.8483948948164824,
+  "confusion_matrix": [
+    [
+      2371,
+      550
+    ],
+    [
+      597,
+      1527
+    ]
+  ]
+}
