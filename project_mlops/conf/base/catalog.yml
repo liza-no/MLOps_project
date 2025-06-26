@@ -35,19 +35,36 @@ reporting_data_train:
 preprocessed_training_data_trees:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_train_data_trees.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
 
 preprocessed_training_data_lr:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_train_data_lr.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
+
 
 preprocessed_test_data_trees:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_test_data_trees.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
 
 preprocessed_test_data_lr:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_test_data_lr.csv
-
+  save_args:
+    index: false
+  load_args:
+    index_col: null
+    
 encoder_transform:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:

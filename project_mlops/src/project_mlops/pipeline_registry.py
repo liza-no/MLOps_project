@@ -8,7 +8,8 @@ from project_mlops.pipelines import (
     data_unit_tests as data_tests,
     preprocessing_train as preprocess_train,
     split_data,
-    preprocessing_test as preprocess_test
+    preprocessing_test as preprocess_test,
+    upload_preprocessed_train_features as upload_train_features
 
 
 )
@@ -23,10 +24,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
     data_unit_tests_pipeline = data_tests.create_pipeline()
     split_data_pipeline = split_data.create_pipeline()
     preprocess_train_pipeline = preprocess_train.create_pipeline()
+    upload_features_pipeline = upload_train_features.create_pipeline()
     preprocess_test_pipeline = preprocess_test.create_pipeline()
 
 
-    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + preprocess_test_pipeline
+    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline
 
     return {
         "all": all_pipelines,
@@ -35,6 +37,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "split_data": split_data_pipeline,
         "preprocess_train": preprocess_train_pipeline,
         "preprocess_test": preprocess_test_pipeline,
+        "upload_train_features": upload_features_pipeline,
         
         "__default__":  ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline
 

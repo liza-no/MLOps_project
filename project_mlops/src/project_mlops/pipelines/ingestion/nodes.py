@@ -1,3 +1,4 @@
+
 import logging
 from typing import Any, Dict, Tuple
 
@@ -46,21 +47,21 @@ def build_data_expectation_suite(suite_name: str = "raw_data_suite") -> Expectat
     # Column type expectations
     expected_types = {
         sanitize_column_name("Booking_ID"): "object",
-        sanitize_column_name("number of adults"): "Int64",
-        sanitize_column_name("number of children"): "Int64",
-        sanitize_column_name("number of weekend nights"): "Int64",
-        sanitize_column_name("number of week nights"): "Int64",
+        sanitize_column_name("number of adults"): "int64",
+        sanitize_column_name("number of children"): "int64",
+        sanitize_column_name("number of weekend nights"): "int64",
+        sanitize_column_name("number of week nights"): "int64",
         sanitize_column_name("type of meal"): "object",
-        sanitize_column_name("car parking space"): "Int64",
+        sanitize_column_name("car parking space"): "int64",
         sanitize_column_name("room type"): "object",
-        sanitize_column_name("lead time"): "Int64",
+        sanitize_column_name("lead time"): "int64",
         sanitize_column_name("market segment type"): "object",
-        sanitize_column_name("repeated"): "Int64",
-        sanitize_column_name("P-C"): "Int64",
-        sanitize_column_name("P-not-C"): "Int64",
+        sanitize_column_name("repeated"): "int64",
+        sanitize_column_name("P-C"): "int64",
+        sanitize_column_name("P-not-C"): "int64",
         sanitize_column_name("average price"): "float64",
-        sanitize_column_name("special requests"): "Int64",
-        sanitize_column_name("date of reservation"): "object",
+        sanitize_column_name("special requests"): "int64",
+        sanitize_column_name("date of reservation"): "datetime64[ns]",
         sanitize_column_name("booking status"): "object"
     }
 
@@ -98,15 +99,15 @@ def build_data_expectation_suite(suite_name: str = "raw_data_suite") -> Expectat
 
 
     # Format of date of reservation string can be potentially parsed as date (no validity check yet)
-    expectation_suite_bank.add_expectation(
-        ExpectationConfiguration(
-            expectation_type="expect_column_values_to_match_regex",
-            kwargs={
-                "column": "date_of_reservation",
-                "regex": r"^(\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{1,2}-\d{1,2})"
-            }
-        )
-    )
+    # expectation_suite_bank.add_expectation(
+    #     ExpectationConfiguration(
+    #         expectation_type="expect_column_values_to_match_regex",
+    #         kwargs={
+    #             "column": "date_of_reservation",
+    #             "regex": r"^(\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{1,2}-\d{1,2})"
+    #         }
+    #     )
+    # )
 
     # Booking status should be either 'Canceled' or 'Not_Canceled'
     expectation_suite_bank.add_expectation(
@@ -187,7 +188,7 @@ def to_feature_store(
         version=feature_group_version,
         description=description,
         primary_key=["Booking_ID"],
-        event_time="datetime",
+        event_time="date_of_reservation",
         online_enabled=False,
         expectation_suite=validation_expectation_suite,
     )
@@ -239,9 +240,9 @@ def ingestion(
 
     # Step 1: Copy data, reset index, and create datetime from reservation date
     df = raw_df.copy()
-    df = df.reset_index()
+    df = df.reset_index(drop=True)
 
-    #df["datetime"] = pd.to_datetime(df["date of reservation"], errors="coerce")
+
 
     df["date of reservation"] = pd.to_datetime(df["date of reservation"], errors="coerce")
     df = df.dropna(subset=["date of reservation"])
@@ -272,45 +273,3 @@ def ingestion(
         logger.info("Upload complete.")
 
     return df
-
-
-'''
-def ingestion(
-    df: pd.DataFrame,
-    parameters: Dict[str, Any]):
-
-    """
-    This function takes in a pandas DataFrame and a validation expectation suite,
-    performs validation on the data using the suite.
-
-    Args:
-        data (pd.DataFrame): Dataframe with the data to be stored
-        group_name (str): Name of the feature group.
-        feature_group_version (int): Version of the feature group.
-        description (str): Description for the feature group.
-        group_description (dict): Description of each feature of the feature group. 
-        validation_expectation_suite (ExpectationSuite): group of expectations to check data.
-        SETTINGS (dict): Dictionary with the settings definitions to connect to the project.
-        
-    Returns:
-       
-    
-    
-    """
-
-    
-
-    df_full= df.drop_duplicates()
-
-
-    logger.info(f"The dataset contains {len(df_full.columns)} columns.")
-
-
-    validation_expectation_suite = build_data_expectation_suite("numerical_expectations")
-
-
-
-
-    return df_full
-
-'''

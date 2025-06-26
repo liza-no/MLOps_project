@@ -1,1 +1,1 @@
-{"ingested_data": {"rows": 36248, "columns": 18, "file_size": 3550369}, "reporting_tests": {"rows": 11, "columns": 12, "file_size": 1627}}
+{"ana_data": {"rows": 8943, "columns": 17, "file_size": 824154}, "preprocessed_test_data_trees": {"rows": 8943, "columns": 22, "file_size": 813897}, "preprocessed_test_data_lr": {"rows": 8943, "columns": 22, "file_size": 1880218}}
