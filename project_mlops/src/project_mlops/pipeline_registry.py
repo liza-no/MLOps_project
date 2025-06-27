@@ -9,7 +9,9 @@ from project_mlops.pipelines import (
     preprocessing_train as preprocess_train,
     split_data,
     preprocessing_test as preprocess_test,
+    upload_preprocessed_train_features as upload_train_features,
     split_train,
+    feature_selection as feature_selection_pipeline,
     model_train as model_train_pipeline,
     model_selection as model_selection_pipeline,
     model_predict
@@ -28,7 +30,9 @@ def register_pipelines() -> Dict[str, Pipeline]:
     data_unit_tests_pipeline = data_tests.create_pipeline()
     split_data_pipeline = split_data.create_pipeline()
     preprocess_train_pipeline = preprocess_train.create_pipeline()
+    upload_features_pipeline = upload_train_features.create_pipeline()
     split_train_pipeline = split_train.create_pipeline()
+    feature_selection = feature_selection_pipeline.create_pipeline()
     model_train = model_train_pipeline.create_pipeline()
     model_selection = model_selection_pipeline.create_pipeline()
     upload_features_pipeline = upload_train_features.create_pipeline()
@@ -36,10 +40,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
     model_predict_pipeline = model_predict.create_pipeline()
 
 
-    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + split_train_pipeline + model_train + model_selection
-    #+ model_selection
-    all_pipelines = ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline + preprocess_test_pipeline + model_predict_pipeline  
-    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline
+    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + split_train_pipeline + feature_selection + model_train + model_selection
+
 
     return {
         "all": all_pipelines,
@@ -48,13 +50,12 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "split_data": split_data_pipeline,
         "preprocess_train": preprocess_train_pipeline,
         "preprocess_test": preprocess_test_pipeline,
+        "upload_train_features": upload_features_pipeline,
         "split_train": split_train_pipeline,
+        "feature_selection": feature_selection,
         "model_train": model_train,
         "model_selection": model_selection,
         "model_predict": model_predict_pipeline,
-        "upload_train_features": upload_features_pipeline,
-        
-        "__default__":  ingestion_pipeline + split_data_pipeline + preprocess_train_pipeline
 
         "__default__": all_pipelines
     }

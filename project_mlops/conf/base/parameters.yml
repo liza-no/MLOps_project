@@ -8,13 +8,16 @@ preprocessing:
 "feature_group_name": "booking_ingested"
 "feature_group_version": 1
 
+"to_feature_store_preprocessed": False
+"feature_group_name_preprocessed": "booking_train_preprocessed"
+"feature_group_version_preprocessed": 1
 split_train_target_column: booking_status
 split_train_date_column: date_of_reservation
 split_train_ratio: 0.8
 
 
 
-use_feature_selection: False
+use_feature_selection: True
 model_name: "hotel"
 baseline_model_params:
   penalty: "l2"

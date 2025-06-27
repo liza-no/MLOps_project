@@ -37,6 +37,7 @@ def model_selection(
     champion_dict: Dict[str, Any],
     champion_model : pickle.Pickler,
     parameters: Dict[str, Any],
+    best_columns
 ):
 
     for df in [ X_train_lr, X_test_lr, X_train_trees, X_test_trees]:
@@ -64,6 +65,7 @@ def model_selection(
         'XGBClassifier': XGBClassifier(),
     }
 
+    use_feature_selection = parameters.get("use_feature_selection", False)
     use_grid_search = parameters.get("use_grid_search", True)
     results = {}
 
@@ -79,6 +81,11 @@ def model_selection(
         X_test = data[model_type]["X_test"]
         y_train = np.ravel(data[model_type]["y_train"])
         y_test = data[model_type]["y_test"]
+
+        if use_feature_selection and model_name == "LogisticRegression":
+            logger.info("Applying feature selection for Logistic Regression using best_columns.")
+            X_train = X_train[best_columns]
+            X_test = X_test[best_columns]
 
         with mlflow.start_run(experiment_id=experiment_id, nested=True):
             mlflow.sklearn.autolog(log_model_signatures=True, log_input_examples=True)
