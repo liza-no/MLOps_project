@@ -151,6 +151,12 @@ production_model:
     type: pickle.PickleDataset
     filepath: data/06_models/production_model.pkl
 
+champion_model:
+  type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
+  dataset:
+    type: pickle.PickleDataset
+    filepath: data/06_models/champion_model.pkl
+
 production_model_metrics:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:

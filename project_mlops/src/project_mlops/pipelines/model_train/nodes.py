@@ -12,6 +12,7 @@ import mlflow
 from sklearn.metrics import accuracy_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
 from sklearn.inspection import permutation_importance, PartialDependenceDisplay
 import shap
 import matplotlib.pyplot as plt
@@ -20,33 +21,27 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 logger = logging.getLogger(__name__)
 
-def model_train(X_train: pd.DataFrame, 
-                X_test: pd.DataFrame, 
-                y_train: pd.DataFrame, 
-                y_test: pd.DataFrame,
-                parameters: Dict[str, Any], 
-                best_columns
-                ):
-    """Trains a baseline model on the given data and saves it to the given model path.
 
-    Args:
-    --
-        X_train (pd.DataFrame): Training features.
-        X_test (pd.DataFrame): Test features.
-        y_train (pd.DataFrame): Training target.
-        y_test (pd.DataFrame): Test target.
 
-    Returns:
-    --
-        model (pickle): Baseline models.
-        scores (json): Baseline model metrics.
-    """
-    for df in [X_train, X_test]:
+def model_train(
+    X_train_lr: pd.DataFrame,
+    X_test_lr: pd.DataFrame,
+    y_train_lr: pd.DataFrame,
+    y_test_lr: pd.DataFrame,
+    X_train_trees: pd.DataFrame,
+    X_test_trees: pd.DataFrame,
+    y_train_trees: pd.DataFrame,
+    y_test_trees: pd.DataFrame,
+    parameters: Dict[str, Any],
+    best_columns
+):
+    """Train and register model based on model_name with corresponding feature sets."""
+
+    # Drop date column if present
+    for df in [X_train_lr, X_test_lr, X_train_trees, X_test_trees]:
         if "date_of_reservation" in df.columns:
-            # Optional: ensure it's datetime
-            #df["date_of_reservation"] = pd.to_datetime(df["date_of_reservation"], errors='coerce')
-            # Then drop it
             df.drop(columns=["date_of_reservation"], inplace=True)
+
 
     # Enable autologging with MLflow
     with open('conf/local/mlflow.yml') as f:
@@ -64,33 +59,37 @@ def model_train(X_train: pd.DataFrame,
 
     results_dict = {}
     with mlflow.start_run(experiment_id=experiment_id, nested=True):
+
+        # Map model names to types (lr vs tree)
+        model_type = "lr" if isinstance(classifier, LogisticRegression) else "tree"
+
+        # Select data according to model type
+        if model_type == "lr":
+            X_train, X_test, y_train, y_test = X_train_lr, X_test_lr, y_train_lr, y_test_lr
+        else:
+            X_train, X_test, y_train, y_test = X_train_trees, X_test_trees, y_train_trees, y_test_trees
+
+
         if parameters["use_feature_selection"] and isinstance(classifier, LogisticRegression):
             #logger.info(f"Using feature selection in model train...")
+            
             X_train = X_train[best_columns]
             X_test = X_test[best_columns]
+
         y_train = np.ravel(y_train)
         model = classifier.fit(X_train, y_train)
+
+        # Log the model without registering
+        model_info = mlflow.sklearn.log_model(model, artifact_path="model")
+
+        # The logged model's artifact URI
+        model_uri = model_info.model_uri
+
+        # Register the model explicitly
+        model_name = "hotel_champion_model"
+        result = mlflow.register_model(model_uri, model_name)
         
-        # Making predictions
-        #y_train_pred = model.predict(X_train)
-        #y_test_pred = model.predict(X_test)
-        # Evaluating model
-        #acc_train = accuracy_score(y_train, y_train_pred)
-        #acc_test = accuracy_score(y_test, y_test_pred)
-        # Saving results in dict
-        #results_dict['classifier'] = classifier.__class__.__name__
-        #results_dict['train_score'] = acc_train
-        #results_dict['test_score'] = acc_test
-        # Logging in mlflow
-        #run_id = mlflow.last_active_run().info.run_id
-        #logger.info(f"Logged train model in run {run_id}")
-        #logger.info(f"Train Accuracy is {acc_train}")
 
-        #logger.info(f"Test Accuracy is {acc_test}")
-
-
-
-        # inside your mlflow run block:
         y_train_pred = model.predict(X_train)
         y_test_pred = model.predict(X_test)
         y_test_prob = model.predict_proba(X_test)[:, 1]  # needed for AUC
@@ -122,7 +121,7 @@ def model_train(X_train: pd.DataFrame,
         logger.info(f"Precision: {precision:.4f} | Recall: {recall:.4f} | F1: {f1:.4f} | AUC: {roc_auc:.4f}")
         logger.info(f"Confusion Matrix: {conf_matrix}")
 
-    # --- Permutation Importance ---
+    # Permutation Importance 
     perm = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
     sorted_idx = perm.importances_mean.argsort()[::-1]
 
@@ -138,7 +137,7 @@ def model_train(X_train: pd.DataFrame,
     plt.savefig("data/08_reporting/permutation_importance.png")
     plt.close()
 
-    # --- Partial Dependence Plots (PDP) ---
+    # Partial Dependence Plots (PDP)
     features_to_plot = ["lead_time", "special_requests", "average_price"]
     fig, ax = plt.subplots(figsize=(12, 6))
     PartialDependenceDisplay.from_estimator(model, X_test, features_to_plot, ax=ax)
@@ -147,13 +146,25 @@ def model_train(X_train: pd.DataFrame,
     plt.close() 
     
     # Shap values calculation for model interpretability
-    explainer = shap.LinearExplainer(model, X_train)
-    shap_values = explainer(X_train)
 
+
+    if isinstance(model, LogisticRegression):
+        explainer = shap.LinearExplainer(model, X_train)
+        shap_values = explainer.shap_values(X_train)
+        shap.initjs()
+        shap.summary_plot(shap_values, X_train, feature_names=X_train.columns, show=False)
     
-    shap.initjs()
+    elif isinstance(model, (RandomForestClassifier, XGBClassifier)):
+        explainer = shap.TreeExplainer(model)
+        X_train_sample = X_train.sample(1000, random_state=42)  
+        shap_values = explainer.shap_values(X_train_sample)
 
-    shap.summary_plot(shap_values, X_train, feature_names=X_train.columns, show=False)
+        shap.initjs()
+        shap.summary_plot(shap_values, X_train_sample, feature_names=X_train_sample.columns, show=False)
+        
+        #shap_values[1] is positive class:
+        if isinstance(shap_values, list):
+            shap_values = shap_values[1]
 
 
     return model, X_train.columns , results_dict, plt

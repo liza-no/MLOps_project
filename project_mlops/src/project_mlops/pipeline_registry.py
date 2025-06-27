@@ -14,7 +14,7 @@ from project_mlops.pipelines import (
     feature_selection as feature_selection_pipeline,
     model_train as model_train_pipeline,
     model_selection as model_selection_pipeline,
-    model_predict
+    model_predict,
     upload_preprocessed_train_features as upload_train_features
 
 
@@ -35,12 +35,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
     feature_selection = feature_selection_pipeline.create_pipeline()
     model_train = model_train_pipeline.create_pipeline()
     model_selection = model_selection_pipeline.create_pipeline()
-    upload_features_pipeline = upload_train_features.create_pipeline()
     preprocess_test_pipeline = preprocess_test.create_pipeline()
     model_predict_pipeline = model_predict.create_pipeline()
 
 
-    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + split_train_pipeline + feature_selection + model_train + model_selection
+    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + split_train_pipeline + feature_selection + model_train + model_selection + model_predict_pipeline
 
 
     return {
