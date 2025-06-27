@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/D/4_FSS_2025_NOVA/MLOps_project/MLOps/project_mlops/mlruns/858990712369033415/aa414e2abd9347418792575b8ad3f9cc/artifacts
+end_time: 1750935472089
+entry_point_name: ''
+experiment_id: '858990712369033415'
+lifecycle_stage: active
+run_id: aa414e2abd9347418792575b8ad3f9cc
+run_name: upload_train_features
+run_uuid: aa414e2abd9347418792575b8ad3f9cc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750935467036
+status: 4
+tags: []
+user_id: Liza_N

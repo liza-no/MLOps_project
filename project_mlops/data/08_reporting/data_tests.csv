@@ -1,0 +1,12 @@
+Success,Expectation Type,Column,Column Pair,Max Value,Min Value,Element Count,Unexpected Count,Unexpected Percent,Value Set,Unexpected Value,Observed Value
+True,expect_column_values_to_be_unique,booking_id,"('', '')",,,36248,0,0.0,,[],
+True,expect_column_to_exist,booking_status,"('', '')",,,,,,,[],
+True,expect_column_distinct_values_to_be_in_set,type_of_meal,"('', '')",,,,,,"['Meal Plan 1', 'Meal Plan 2', 'Meal Plan 3', 'Not Selected']",[],"['Meal Plan 1', 'Meal Plan 2', 'Meal Plan 3', 'Not Selected']"
+True,expect_column_distinct_values_to_be_in_set,room_type,"('', '')",,,,,,"['Room_Type 1', 'Room_Type 2', 'Room_Type 3', 'Room_Type 4', 'Room_Type 5', 'Room_Type 6', 'Room_Type 7']",[],"['Room_Type 1', 'Room_Type 2', 'Room_Type 3', 'Room_Type 4', 'Room_Type 5', 'Room_Type 6', 'Room_Type 7']"
+True,expect_column_distinct_values_to_be_in_set,market_segment_type,"('', '')",,,,,,"['Online', 'Offline', 'Corporate', 'Complementary', 'Aviation']",[],"['Aviation', 'Complementary', 'Corporate', 'Offline', 'Online']"
+True,expect_column_values_to_be_between,number_of_adults,"('', '')",4,0,36248,0,0.0,,[],
+True,expect_column_values_to_be_between,number_of_children,"('', '')",10,0,36248,0,0.0,,[],
+True,expect_column_values_to_be_between,number_of_week_nights,"('', '')",17,0,36248,0,0.0,,[],
+True,expect_column_values_to_be_between,number_of_weekend_nights,"('', '')",7,0,36248,0,0.0,,[],
+False,expect_column_values_to_be_between,lead_time,"('', '')",365.0,0,36248,243,0.6703818141690576,,[],
+False,expect_column_values_to_be_between,average_price,"('', '')",500,0,36248,1,0.002758772897815052,,[],

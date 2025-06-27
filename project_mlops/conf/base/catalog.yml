@@ -7,7 +7,10 @@ ingested_data:
   type: pandas.CSVDataset
   filepath: data/02_intermediate/ingested_data.csv
 
-
+reporting_tests:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/data_tests.csv
+  
 ref_data:
   type: pandas.CSVDataset
   filepath: data/02_intermediate/ref_data.csv
@@ -32,19 +35,36 @@ reporting_data_train:
 preprocessed_training_data_trees:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_train_data_trees.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
 
 preprocessed_training_data_lr:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_train_data_lr.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
+
 
 preprocessed_test_data_trees:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_test_data_trees.csv
+  save_args:
+    index: false
+  load_args:
+    index_col: null
 
 preprocessed_test_data_lr:
   type: pandas.CSVDataset
   filepath: data/03_primary/preprocessed_test_data_lr.csv
-
+  save_args:
+    index: false
+  load_args:
+    index_col: null
+    
 encoder_transform:
   type: kedro_mlflow.io.artifacts.MlflowArtifactDataset
   dataset:

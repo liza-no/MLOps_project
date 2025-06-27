@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/D/4_FSS_2025_NOVA/MLOps_project/MLOps/project_mlops/mlruns/858990712369033415/e2d2d957f06141acb0f806292940102c/artifacts
+end_time: 1750941246982
+entry_point_name: ''
+experiment_id: '858990712369033415'
+lifecycle_stage: active
+run_id: e2d2d957f06141acb0f806292940102c
+run_name: ingestion
+run_uuid: e2d2d957f06141acb0f806292940102c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1750941242663
+status: 4
+tags: []
+user_id: Liza_N

@@ -79,6 +79,7 @@ def feature_engineer( data: pd.DataFrame, OH_encoder, ST_scaler, params: Dict , 
     OH_cols= pd.DataFrame(OH_encoder.transform(df[categorical_features]))
 
     OH_cols.columns = OH_encoder.get_feature_names_out(categorical_features)
+    OH_cols.columns = [col.replace(" ", "_").lower() for col in OH_encoder.get_feature_names_out(categorical_features)]
 
     # put back the index
     OH_cols.index = df.index
@@ -98,8 +99,8 @@ def feature_engineer( data: pd.DataFrame, OH_encoder, ST_scaler, params: Dict , 
     df_final_lr[numerical_features] = scaled_num_df[numerical_features]
 
     # set booking_id as index
-    df_final_tree.set_index("booking_id", inplace=True)
-    df_final_lr.set_index("booking_id", inplace=True)
+    #df_final_tree.set_index("booking_id", inplace=True)
+    #df_final_lr.set_index("booking_id", inplace=True)
 
 
     log = logging.getLogger(__name__)

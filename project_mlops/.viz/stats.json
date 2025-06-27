@@ -1,1 +1,1 @@
-{"X_test_lr": {"rows": 5045, "columns": 21, "file_size": 1082475}, "batch_predictions": {"rows": 5045, "columns": 2, "file_size": 118216}}
+{"ana_data": {"rows": 8943, "columns": 17, "file_size": 824154}, "preprocessed_test_data_trees": {"rows": 8943, "columns": 22, "file_size": 813897}, "preprocessed_test_data_lr": {"rows": 8943, "columns": 22, "file_size": 1880218}}
