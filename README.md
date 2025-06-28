@@ -49,3 +49,23 @@ kedro run
 ```bash
 kedro run --pipeline=model_train
 ```
+
+### 5. Set up the python path for testing
+```bash
+$env:PYTHONPATH = "src"
+```
+
+### 6. Run all tests at once
+```bash
+pytest -v
+```
+
+### 7. To run tests for a specific component, use the relevant test file. For example, to test the data preprocessing pipeline:
+```bash
+pytest tests\pipelines\test_data_preprocessing.py
+```
+
+### 8. Monitor Experiments with MLflow
+```bash
+mlflow ui --port 5000
+```
