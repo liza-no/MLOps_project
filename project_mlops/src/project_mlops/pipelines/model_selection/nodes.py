@@ -18,18 +18,10 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
 
-
 import mlflow
-
-#Note: Need to change data used per model (Logistic Regression will have a diff preprocessing than Random Forest and XGBoost)
+from sklearn.model_selection import StratifiedKFold
 
 logger = logging.getLogger(__name__)
-
-
-from sklearn.model_selection import StratifiedKFold
-from sklearn.metrics import make_scorer
-
-
 
 def model_selection(
     X_train_lr, X_test_lr, y_train_lr, y_test_lr,
@@ -39,9 +31,14 @@ def model_selection(
     parameters: Dict[str, Any],
     best_columns
 ):
+    '''
+    Compares multiple classification models using provided training and test data, applies optional feature selection and 
+    grid search, logs results to MLflow, and returns the best-performing model based on F1 score.
+    '''
 
     for df in [ X_train_lr, X_test_lr, X_train_trees, X_test_trees]:
         if "date_of_reservation" in df.columns:
+            df.set_index("booking_id", inplace=True)
             df.drop(columns=["date_of_reservation"], inplace=True)
 
     warnings.filterwarnings("ignore", category=Warning)
@@ -135,6 +132,4 @@ def model_selection(
     else:
         logger.info(f"Retaining existing champion: {champion_dict['regressor']} with score: {champion_dict['f1_score']:.4f} vs {best_f1:.4f}")
         return champion_model
-
-
 

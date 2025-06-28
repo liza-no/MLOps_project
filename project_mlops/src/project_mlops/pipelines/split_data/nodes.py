@@ -1,6 +1,9 @@
 import pandas as pd
 
 def split_data(df: pd.DataFrame, parameters):
+    '''
+    Splits the input DataFrame into reference (train) and analysis (test) datasets based on a temporal split.
+    '''
     df = df.copy()
 
     # Ensure datetime format

@@ -38,12 +38,31 @@ def register_pipelines() -> Dict[str, Pipeline]:
     preprocess_test_pipeline = preprocess_test.create_pipeline()
     model_predict_pipeline = model_predict.create_pipeline()
 
+    preprocessing_pipeline = (
+        split_data_pipeline
+        + preprocess_train_pipeline
+        + preprocess_test_pipeline
+        + upload_features_pipeline
+        + split_train_pipeline
+        + feature_selection
+    )
 
-    all_pipelines = ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + split_train_pipeline + feature_selection + model_train + model_selection + model_predict_pipeline
+    model_pipeline = model_train + model_predict_pipeline
+    model_new_champion = model_selection + model_train + model_predict_pipeline
+
+    all_pipelines = (ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + 
+                     preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + 
+                     split_train_pipeline + feature_selection + model_train + model_selection + model_predict_pipeline)
 
 
     return {
+        #Grouped pipelines:
         "all": all_pipelines,
+        "preprocessing_pipeline": preprocessing_pipeline,
+        "model_pipeline": model_pipeline,
+        "model_new_champion": model_new_champion,
+
+        #Individual pipelines:
         "ingestion": ingestion_pipeline,
         "data_unit_tests": data_unit_tests_pipeline,
         "split_data": split_data_pipeline,
@@ -55,6 +74,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "model_train": model_train,
         "model_selection": model_selection,
         "model_predict": model_predict_pipeline,
-
+        
+        # Default pipeline
         "__default__": all_pipelines
     }

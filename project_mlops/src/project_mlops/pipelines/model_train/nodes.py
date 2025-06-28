@@ -22,7 +22,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 logger = logging.getLogger(__name__)
 
 
-
 def model_train(
     X_train_lr: pd.DataFrame,
     X_test_lr: pd.DataFrame,
@@ -40,6 +39,7 @@ def model_train(
     # Drop date column if present
     for df in [X_train_lr, X_test_lr, X_train_trees, X_test_trees]:
         if "date_of_reservation" in df.columns:
+            df.set_index("booking_id", inplace=True)
             df.drop(columns=["date_of_reservation"], inplace=True)
 
 
@@ -58,6 +58,7 @@ def model_train(
         classifier = LogisticRegression(**parameters['baseline_model_params'])
 
     results_dict = {}
+
     with mlflow.start_run(experiment_id=experiment_id, nested=True):
 
         # Map model names to types (lr vs tree)
@@ -71,8 +72,7 @@ def model_train(
 
 
         if parameters["use_feature_selection"] and isinstance(classifier, LogisticRegression):
-            #logger.info(f"Using feature selection in model train...")
-            
+            logger.info(f"Using feature selection in model train...")
             X_train = X_train[best_columns]
             X_test = X_test[best_columns]
 

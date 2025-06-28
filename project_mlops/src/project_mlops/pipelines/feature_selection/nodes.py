@@ -1,13 +1,21 @@
 
 from sklearn.feature_selection import SelectKBest, f_classif
 import pandas as pd
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 def feature_selection(X: pd.DataFrame, y: pd.Series, k: int = 10) -> pd.DataFrame:
     """
     Selects the top K features based on the ANOVA F-test.
     """
+    X.set_index("booking_id", inplace=True)
 
     X.drop(columns=["date_of_reservation"], inplace=True)
+
+    logger.info(X.columns)
+    logger.info(X.head)
 
     selector = SelectKBest(score_func=f_classif, k=k)
     selector.fit(X, y)
