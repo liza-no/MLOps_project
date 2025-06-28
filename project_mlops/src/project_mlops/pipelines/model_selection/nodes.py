@@ -130,6 +130,6 @@ def model_selection(
         logger.info(f"New champion: {best_model_name} with score: {best_f1:.4f} vs {champion_dict['f1_score']:.4f}")
         return best_model
     else:
-        logger.info(f"Retaining existing champion: {champion_dict['regressor']} with score: {champion_dict['f1_score']:.4f} vs {best_f1:.4f}")
+        logger.info(f"Retaining existing champion: {champion_dict['classifier']} with score: {champion_dict['f1_score']:.4f} vs {best_f1:.4f}")
         return champion_model
 
