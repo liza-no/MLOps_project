@@ -15,8 +15,8 @@ from project_mlops.pipelines import (
     model_train as model_train_pipeline,
     model_selection as model_selection_pipeline,
     model_predict,
-    upload_preprocessed_train_features as upload_train_features
-
+    upload_preprocessed_train_features as upload_train_features, 
+    data_drift as data_drift_pipeline
 
 )
 
@@ -37,6 +37,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     model_selection = model_selection_pipeline.create_pipeline()
     preprocess_test_pipeline = preprocess_test.create_pipeline()
     model_predict_pipeline = model_predict.create_pipeline()
+    drift_pipeline = data_drift_pipeline.create_pipeline()
 
     preprocessing_pipeline = (
         split_data_pipeline
@@ -52,8 +53,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
 
     all_pipelines = (ingestion_pipeline + data_unit_tests_pipeline + split_data_pipeline + 
                      preprocess_train_pipeline + upload_features_pipeline + preprocess_test_pipeline + 
-                     split_train_pipeline + feature_selection + model_train + model_selection + model_predict_pipeline)
-
+                     split_train_pipeline + feature_selection + model_train + model_selection + model_predict_pipeline + drift_pipeline)
+ 
 
     return {
         #Grouped pipelines:
@@ -74,6 +75,8 @@ def register_pipelines() -> Dict[str, Pipeline]:
         "model_train": model_train,
         "model_selection": model_selection,
         "model_predict": model_predict_pipeline,
+        "data_drift": drift_pipeline,
+
         
         # Default pipeline
         "__default__": all_pipelines

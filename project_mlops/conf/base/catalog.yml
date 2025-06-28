@@ -188,3 +188,8 @@ partial_dependence_plot:
   dataset:
     type: matplotlib.MatplotlibWriter
     filepath: data/08_reporting/partial_dependence_plot.png
+
+# Data drift detection outputs
+drift_detection_results:
+  type: json.JSONDataset
+  filepath: data/08_reporting/drift_detection_results.json
