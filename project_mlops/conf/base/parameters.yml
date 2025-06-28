@@ -1,5 +1,5 @@
 target_column: "booking status"
-cutoff_date: "9/19/2018"
+split_ratio: 0.75
 
 preprocessing:
   drop_columns: ["car_parking_space", "repeated", "p_c", "p_not_c"]
@@ -11,3 +11,21 @@ preprocessing:
 "to_feature_store_preprocessed": False
 "feature_group_name_preprocessed": "booking_train_preprocessed"
 "feature_group_version_preprocessed": 1
+split_train_target_column: booking_status
+split_train_date_column: date_of_reservation
+split_train_ratio: 0.8
+
+
+use_grid_search: True
+use_feature_selection: True
+model_name: "hotel"
+baseline_model_params:
+  penalty: "l2"
+  C: 1.0
+  solver: "lbfgs"
+  max_iter: 100
+  random_state: 42
+
+
+
+
