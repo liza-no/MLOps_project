@@ -26,6 +26,21 @@ baseline_model_params:
   max_iter: 100
   random_state: 42
 
-
-
-
+drift_detection:
+  # Data settings
+  reference_data_path: "data/03_primary/X_train_trees.csv"
+  timestamp_column: 'date_of_reservation'
+  chunk_size: 1500  # ~6 chunks for analysis data (8943/1500 ≈ 6)
+  
+  # Feature selection - use all features from model training
+  use_all_model_features: true
+  
+  # Detection methods by feature type
+  categorical_methods: ['chi2']  # For binary features
+  continuous_methods: ['jensen_shannon']  # For float features  
+  discrete_methods: ['chi2']  # For int features (treat as categorical)
+  
+  # Alert settings
+  alert_threshold: 0.05
+  save_plots: true
+  plots_path: "data/08_reporting/"
