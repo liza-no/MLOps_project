@@ -27,9 +27,6 @@ The main objective is to build a complete and modular Machine Learning Pipeline 
 - Storage: Hopsworks (feature store)
 - Monitoring: NannyML (drift detection)
 
-## Project Structure
-EDIT THIS 
-
 ## Getting Started
 ### 1. Clone the repository
 
