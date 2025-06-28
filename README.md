@@ -31,7 +31,7 @@ The main objective is to build a complete and modular Machine Learning Pipeline 
 ### 1. Clone the repository
 
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/IlonaNacu/MLOps/tree/main
 cd MLOPS/project_mlops
 ```
 
