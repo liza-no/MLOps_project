@@ -69,3 +69,5 @@ pytest tests\pipelines\test_data_preprocessing.py
 ```bash
 mlflow ui --port 5000
 ```
+## Final Report
+For a complete description of the project, methodology, and analysis, please refer to [`Report_MLOps.pdf`](./Report_MLOps.pdf) included in this repository.
